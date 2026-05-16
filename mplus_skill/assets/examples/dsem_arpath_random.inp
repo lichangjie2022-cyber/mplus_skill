@@ -1,0 +1,36 @@
+montecarlo:
+	names = y1-y5;
+    NOBS = 10000;
+    NREP = 100;
+    NCSIZES = 1;
+    CSIZES = 100(100);
+    results=3.dat;
+
+ANALYSIS:   TYPE IS TWOLEVEL;
+    		estimator=bayes;
+            biter=(500); proc=2;
+
+model montecarlo:
+    %within%
+	f by y1-y5*1 (&1);
+	y1-y5*1;
+	f@1;
+    f on f&1*0.4;
+    y1-y5 on f&1*0.6;
+
+    %between%
+    fb by y1-y5*0.5; fb@1; y1-y5*0.2;
+
+model:	
+    %within%
+	f by y1-y5*1 (&1);
+	y1-y5*1;
+	f@1;
+    y1-y5 on f&1*0.6;
+
+    %between%
+    fb by y1-y5*0.5; fb@1; y1-y5*0.2;
+
+output:
+	tech8;
+

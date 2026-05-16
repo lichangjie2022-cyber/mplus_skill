@@ -1,0 +1,39 @@
+Title:	
+ESEM-Within-CFA on Time 1 data
+
+DATA:
+FILE IS "ESEM.dat";
+!Either identify the data file this way and ensure that is is in the same folder 
+!as the input or Indicate the full link to the data file 
+!FILE IS "C:\Users\author\Desktop\ESEM chapter\ESEM.dat";
+
+VARIABLE:
+! List the name of the variables as they appear in the data file
+NAMES ARE X1 X2 X3 X4 X5 X6  Y1 Y2 Y3 Y4 Y5 Y6  GV; 
+
+!If you have an identification variable use the following command where "ID" is 
+!the name of this variable 
+!IDVARIABLE = ID;
+!If you have missing data use the following command where "999" is the code 
+!used for missing
+!MISSING ARE ALL (999);
+
+!List the variables used in the model
+USEVARIABLES ARE X1 X2 X3 X4 X5 X6 ; 
+
+ANALYSIS:
+! To identify an alternative estimator, use the following commands
+! ESTIMATOR IS MLR;
+! ESTIMATOR IS WLSMV;
+
+MODEL:
+!Use ESEM results as start values, while fixing the variance to 1 and 
+!fixing one cross loading per factor to its ESEM value. 
+F1 BY X1*.902 X2*.646 X3*.579 X4*.160 X5*.143 X6@-.039  ;
+F2 BY X4*.885 X5*.582 X6*.480 X1@-.041 X2*.218 X3*.344 ; 
+F1-F2@1;
+[X1*.656 X2*.450 X3*.457 X4*.710 X5*.432 X6*.574];
+X1*.391  X2*.290 X3*.538 X4*.400 X5*.313 X6*.504 ;
+
+OUTPUT:
+SAMPSTAT STANDARDIZED RESIDUAL CINTERVAL MODINDICES (3.0) TECH2 TECH4;
